@@ -4,8 +4,11 @@ import { Container, Row, Col, Card, Spinner, Alert, Button } from "react-bootstr
 
 const API_KEY = "96bfb0dfe48d197674b9ada73c1df14d";
 
-const DetailsPage = () => {
-  const { cityName } = useParams(); // Gets the city name from the URL
+const Details = () => {
+  /* const { cityName } = useParams(); */ // Gets the city name from the URL
+
+  /*   const { coords } = useParams();
+  const [lat, lon] = coords.split(","); */
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
@@ -67,20 +70,18 @@ const DetailsPage = () => {
     };
 
     fetchLocationAndWeather();
-  }, [cityName]); // Ricarica se il cityName dall'URL cambia
+  }, [cityName]); // Reload if the cityName changes
 
+  // Function to show next 5 days
   const processForecastData = (forecastList) => {
-    // (Stessa logica di prima, o migliorata se vuoi)
-    const dailyData = [];
-    const seenDates = new Set();
-    for (const item of forecastList) {
-      const date = item.dt_txt.split(" ")[0];
-      if (!seenDates.has(date) && dailyData.length < 5) {
-        seenDates.add(date);
-        dailyData.push(item);
+    const dailyForecast = {};
+    forecastList.forEach((item) => {
+      const [date, time] = item.dt_txt.split(" ");
+      if (time === "12:00:00") {
+        dailyForecast[date] = item;
       }
-    }
-    return dailyData;
+    });
+    return Object.values(dailyForecast).slice(0, 5);
   };
 
   // --- Loading ---
@@ -95,7 +96,7 @@ const DetailsPage = () => {
 
   if (error) {
     return (
-      // to fix style
+      // TODO: fix style
       <Container className="text-center py-5">
         <Alert variant="danger">
           <h4>Oops! An error occurred.</h4>
@@ -119,7 +120,7 @@ const DetailsPage = () => {
       </Row>
 
       {currentWeather && (
-        <Card className="mb-4 weather-card current-weather-card">
+        <Card className="mb-4 weather-card current-weather-card py-3">
           <Card.Body className="text-center">
             <Card.Title as="h2">Current weather in {displayCityName}</Card.Title>
             {currentWeather.weather && currentWeather.weather.length > 0 && (
@@ -165,7 +166,7 @@ const DetailsPage = () => {
                       />
                     )}
                     <p className="mb-1 mt-1 fs-4">{Math.round(day.main.temp)}°C</p>
-                    <p className="small text-capitalize">{day.weather && day.weather.length > 0 ? day.weather[0].description : ""}</p>
+                    <p className="small text-capitalize mb-0">{day.weather && day.weather.length > 0 ? day.weather[0].description : ""}</p>
                   </Card.Body>
                 </Card>
               </Col>
@@ -177,4 +178,4 @@ const DetailsPage = () => {
   );
 };
 
-export default DetailsPage;
+export default Details;

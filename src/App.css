@@ -79,13 +79,21 @@ body {
   border-radius: 15px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .weather-card:hover {
   transform: translateY(-5px);
+  background-color: #4a90e2 !important;
+  color: white !important;
 }
 
 .forecast-title {
   color: white;
 }
 /* to continue */
+
+.current-weather-card {
+  background-color: #4a90e2 !important;
+  color: white !important;
+}

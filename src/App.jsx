@@ -11,7 +11,10 @@ function App() {
         <Container fluid>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/details/:cityName" element={<Details />} />
+            {/* path with cityName */}
+            {/*  <Route path="/details/:cityName" element={<Details />} /> */}
+            {/* patch with lat and long */}
+            <Route path="/details/:coords" element={<Details />} />
           </Routes>
         </Container>
       </>
