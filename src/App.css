@@ -73,19 +73,18 @@ body {
 
 .weather-card {
   /* to change background or icons */
-  background-color: #1f2a47 !important;
-  color: #c5cee0;
+  background: linear-gradient(135deg, #4a90e2, #6fb1fc) !important;
+  color: white;
   border: 1px solid #2a3f5f !important;
   border-radius: 15px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
 }
 
 .weather-card:hover {
   transform: translateY(-5px);
-  background-color: #4a90e2 !important;
-  color: white !important;
+  box-shadow: 0 0 20px rgba(185, 214, 247, 0.664);
+  background-color: #5aa0f2 !important;
 }
 
 .forecast-title {
@@ -94,6 +93,5 @@ body {
 /* to continue */
 
 .current-weather-card {
-  background-color: #4a90e2 !important;
-  color: white !important;
+  box-shadow: 0 0 20px rgba(185, 214, 247, 0.664);
 }

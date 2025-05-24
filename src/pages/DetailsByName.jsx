@@ -4,11 +4,9 @@ import { Container, Row, Col, Card, Spinner, Alert, Button } from "react-bootstr
 
 const API_KEY = "96bfb0dfe48d197674b9ada73c1df14d";
 
-const Details = () => {
-  /* const { cityName } = useParams(); */ // Gets the city name from the URL
-
-  /*   const { coords } = useParams();
-  const [lat, lon] = coords.split(","); */
+const DetailsByName = () => {
+  const { cityName } = useParams(); // Gets the city name from the URL
+  console.log(cityName);
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
@@ -110,7 +108,7 @@ const Details = () => {
   }
 
   return (
-    <Container className="pt-5">
+    <Container className="pt-3 pt-lg-5">
       <Row className="mb-3">
         <Col>
           <Button as={Link} to="/" variant="outline-light">
@@ -120,31 +118,35 @@ const Details = () => {
       </Row>
 
       {currentWeather && (
-        <Card className="mb-4 weather-card current-weather-card py-3">
-          <Card.Body className="text-center">
-            <Card.Title as="h2">Current weather in {displayCityName}</Card.Title>
-            {currentWeather.weather && currentWeather.weather.length > 0 && (
-              <img
-                src={`https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`}
-                alt={currentWeather.weather[0].description}
-                style={{ width: "100px", height: "100px" }}
-              />
-            )}
-            <Card.Text className="display-4 my-1">{Math.round(currentWeather.main.temp)}°C</Card.Text>
-            <p className="lead text-capitalize mb-2">
-              {currentWeather.weather && currentWeather.weather.length > 0 ? currentWeather.weather[0].description : ""}
-            </p>
-            <Row className="mt-3">
-              <Col>
-                <strong>Humidity:</strong> {currentWeather.main.humidity}%
-              </Col>
-              <Col>
-                {/* TODO: fix the wind */}
-                <strong>Wind:</strong> {Math.round(currentWeather.wind.speed)} km/h
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
+        <Row className="d-flex justify-content-center">
+          <Col xs={12} s={6} md={8} lg={6}>
+            <Card className="mb-4 weather-card current-weather-card py-3">
+              <Card.Body className="text-center">
+                <Card.Title as="h2">Current weather in {displayCityName}</Card.Title>
+                {currentWeather.weather && currentWeather.weather.length > 0 && (
+                  <img
+                    src={`https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`}
+                    alt={currentWeather.weather[0].description}
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                )}
+                <Card.Text className="display-4 my-1">{Math.round(currentWeather.main.temp)}°C</Card.Text>
+                <p className="lead text-capitalize mb-2">
+                  {currentWeather.weather && currentWeather.weather.length > 0 ? currentWeather.weather[0].description : ""}
+                </p>
+                <Row className="mt-3">
+                  <Col>
+                    <strong>Humidity:</strong> {currentWeather.main.humidity}%
+                  </Col>
+                  <Col>
+                    {/* TODO: fix the wind */}
+                    <strong>Wind:</strong> {Math.round(currentWeather.wind.speed)} km/h
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
       )}
 
       {forecast.length > 0 && (
@@ -178,4 +180,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default DetailsByName;
