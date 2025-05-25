@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Form, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import CurrentCardWeather from "../components/CurrentCardWeather";
 
 const API_KEY = "96bfb0dfe48d197674b9ada73c1df14d";
 
@@ -20,7 +21,42 @@ const Homepage = () => {
 
   // DetailsByCoords
   const [city, setCity] = useState("");
+  const [recentSearches, setRecentSearches] = useState([]);
   const navigate = useNavigate();
+
+  // localStorage for the History
+  const saveSearch = (searchObj) => {
+    const prev = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    // to avoid duplicates
+    const updated = [searchObj, ...prev.filter((s) => s.city !== searchObj.city)];
+    localStorage.setItem("recentSearches", JSON.stringify(updated));
+  };
+
+  // to load the weather for recent search
+  useEffect(() => {
+    const loadRecentWeather = async () => {
+      const saved = JSON.parse(localStorage.getItem("recentSearches")) || [];
+      const limited = saved.slice(0, 3);
+
+      const results = await Promise.all(
+        limited.map(async ({ city, lat, lon }) => {
+          try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            return { city, weather: data };
+          } catch (err) {
+            console.log("Error to locate current weather:", err);
+            return null;
+          }
+        })
+      );
+
+      setRecentSearches(results);
+    };
+
+    loadRecentWeather();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +76,8 @@ const Homepage = () => {
         return;
       }
 
-      const { lat, lon } = data[0];
+      const { lat, lon, name } = data[0];
+      saveSearch({ city: name, lat, lon });
       navigate(`/details/${lat},${lon}`);
     } catch (err) {
       console.error("Error fetching coordinates:", err);
@@ -101,9 +138,9 @@ const Homepage = () => {
   };
 
   return (
-    <Row className="justify-content-center align-items-center min-vh-100 text-center">
-      <Col md={8} lg={6} xl={5}>
-        <h1 className="app-title mb-3 fw-semibold">Pick Location</h1>
+    <Row className="justify-content-center align-items-center min-vh-100 text-center pt-5 pt-sm-0">
+      <Col xs={12} sm={12} md={10} lg={8} xl={6}>
+        <h1 className="app-title mb-3 fw-semibold ">Pick Location</h1>
         <p className="app-subtitle mb-4">Find the area or city that you want to know the detailed weather info at this time</p>
         <Form onSubmit={handleSubmit}>
           <Row className="g-2">
@@ -136,6 +173,19 @@ const Homepage = () => {
             </Col>
           </Row>
         </Form>
+        {/* Recent Searches */}
+        {recentSearches.length > 0 && (
+          <div className="mt-5">
+            <h3 className="text-center mb-4 forecast-title fw-semibold">Recent Searches</h3>
+            <Row xs={1} sm={3} md={3} lg={3} className="g-4 justify-content-center">
+              {recentSearches.map(({ weather }, idx) => (
+                <Col key={idx}>
+                  <CurrentCardWeather weather={weather} className="recent-search-card w-100" isHomepage />
+                </Col>
+              ))}
+            </Row>
+          </div>
+        )}
       </Col>
     </Row>
   );

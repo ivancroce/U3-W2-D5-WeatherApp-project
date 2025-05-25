@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Card, Spinner, Alert, Button } from "react-bootstrap";
 import CurrentCardWeather from "../components/CurrentCardWeather";
-import ForecastCardWeather from "../components/ForecastCardWather";
+import ForecastCardWeather from "../components/ForecastCardWeather";
 
 const API_KEY = "96bfb0dfe48d197674b9ada73c1df14d";
 
@@ -84,7 +84,7 @@ const DetailsByCoords = () => {
       </Row>
 
       {currentWeather && (
-        <Row className="d-flex justify-content-center">
+        <Row className="d-flex justify-content-center my-5">
           <Col xs={12} s={6} md={8} lg={6}>
             <CurrentCardWeather weather={currentWeather} />
           </Col>
@@ -92,7 +92,7 @@ const DetailsByCoords = () => {
       )}
       {forecast.length > 0 && (
         <>
-          <h3 className="text-center mb-3 forecast-title fw-semibold mt-3">Next Days</h3>
+          <h3 className="text-center mb-4 forecast-title fw-semibold">Next Days</h3>
           <Row xs={1} sm={2} md={3} lg={5} className="g-3">
             {forecast.map((day, index) => (
               <Col key={index}>
